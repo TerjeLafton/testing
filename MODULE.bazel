@@ -1,0 +1,32 @@
+"""The main module for the testing repo"""
+
+module(
+    name = "testing",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "rules_go", version = "0.46.0")
+bazel_dep(name = "gazelle", version = "0.35.0")
+bazel_dep(name = "rules_oci", version = "1.7.4")
+bazel_dep(name = "rules_pkg", version = "0.10.1")
+
+go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
+go_sdk.download(version = "1.22.1")
+go_sdk.host()
+
+go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
+go_deps.module(
+    path = "golang.org/x/example/hello",
+    sum = "h1:lnHwduM5X5Fb0YnIPyjyGzRY88cc0Fo6xTgaWDX2c7Q=",
+    version = "v0.0.0-20240205180059-32022caedd6a",
+)
+use_repo(go_deps, "org_golang_x_example_hello")
+
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+oci.pull(
+    name = "distroless_base",
+    image = "gcr.io/distroless/base",
+    digest = "sha256:ccaef5ee2f1850270d453fdf700a5392534f8d1a8ca2acda391fbb6a06b81c86",
+    platforms = ["linux/amd64"],
+)
+use_repo(oci, "distroless_base")

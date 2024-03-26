@@ -1,0 +1,9 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "internal",
+    srcs = ["lib.go"],
+    importpath = "github.com/terjelafton/testing/internal",
+    visibility = ["//:__subpackages__"],
+    deps = ["@org_golang_x_example_hello//reverse"],
+)
